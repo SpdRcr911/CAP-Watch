@@ -24,8 +24,8 @@ def download_and_extract_capwatch(org, file_path, unit_only=0):
     if response.status_code == 200:
         with open(file_path, 'wb') as file:
             file.write(response.content)
+        extract_dir = os.path.dirname(os.path.abspath(file_path))
         with zipfile.ZipFile(file_path, 'r') as zip_ref:
-            extract_dir = os.path.dirname(file_path)
             zip_ref.extractall(extract_dir)
         for fname in os.listdir(extract_dir):
             if fname.lower().endswith('.pdf'):
