@@ -25,8 +25,11 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run invokeCapWatch.py
-        run: python invokeCapWatch.py
+      - name: Run Download and extract CAP Watch
+        env:
+          CAP_USERNAME: ${{ secrets.CAP_USERNAME }}
+          CAP_PASSWORD: ${{ secrets.CAP_PASSWORD }}
+        run: python download_and_extract_capwatch.py ${{ vars.CAP_ORG }} data.zip
 
       - name: Upload CAPWATCH data artifacts
         uses: actions/upload-artifact@v4
