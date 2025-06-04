@@ -31,9 +31,18 @@ jobs:
           CAP_PASSWORD: ${{ secrets.CAP_PASSWORD }}
         run: python download_and_extract_capwatch.py ${{ vars.CAP_ORG }} data.zip
 
+      - name: Convert CSVs to SQLite
+        run: python csvs_to_sqlite.py
+
       - name: Upload CAPWATCH data artifacts
         uses: actions/upload-artifact@v4
         with:
           name: capwatch-data
           path: download_data/*.csv
           if-no-files-found: warn
+      - name: Upload SQLite DB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: capwatch-sqlite
+          path: download_data/capwatch.db
+          if-no-files-found: error
