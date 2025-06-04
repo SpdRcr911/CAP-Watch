@@ -1,0 +1,36 @@
+name: Download CAPWATCH Data
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  download-capwatch-data:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: download_data
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run invokeCapWatch.py
+        run: python invokeCapWatch.py
+
+      - name: Upload CAPWATCH data artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: capwatch-data
+          path: download_data/*.csv
+          if-no-files-found: warn
